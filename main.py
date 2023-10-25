@@ -112,7 +112,6 @@ def detectar_numero_repetido(lista):
 
 
 def test_detectar_numero_repetido():
-    # Test case 1: Cycle in the list, with repeated number
     print("Lista con un valor repetido:")
     lista = [3, 1, 0, 3, 2]
     print(lista)
