@@ -1,148 +1,149 @@
 
 
-class Nodo():
-    def __init__(self, valor):
-        self.valor = valor
-        self.siguiente = None
-
-    def __repr__(self) -> str:
-        return f"<nodo {self.valor}>"
-
 def imprimir_lista(lista):
-        nodo_actual = lista
-        while nodo_actual:
-            print(nodo_actual.valor, end=" -> ")
-            nodo_actual = nodo_actual.siguiente
-        print("None")
+    nodo_actual = lista
+    while nodo_actual:
+        print(nodo_actual.valor, end=" -> ")
+        nodo_actual = nodo_actual.siguiente
+    print("None")
+
 
 # Floyds and Tortoise
 
-
 def FloydsTortoise(lista):
-    tortuga = lista
-    liebre = lista
+    """
+    Esta función implementa el algoritmo de Floyd de la tortuga y la liebre para detectar ciclos en una lista enlazada.
+    Toma una lista enlazada como entrada y devuelve True si se detecta un ciclo, False en caso contrario.
+    Si se detecta un ciclo, también imprime los nodos involucrados en el ciclo.
+
+    Args:
+    - lista: la lista enlazada para verificar ciclos
+
+    Returns:
+    - True si se detecta un ciclo, False en caso contrario
+    """
+
+    tortuga = lista  # inicializar el puntero de la tortuga a la cabeza de la lista enlazada
+    liebre = lista  # inicializar el puntero de la liebre a la cabeza de la lista enlazada
     ciclo = False
 
+    # iterar a través de la lista enlazada usando los punteros de la liebre y la tortuga
     while (liebre and liebre.siguiente and tortuga):
-        tortuga = tortuga.siguiente
+        tortuga = tortuga.siguiente  # mover el puntero de la tortuga un paso hacia adelante
+        # mover el puntero de la liebre dos pasos hacia adelante
         liebre = liebre.siguiente.siguiente
 
+        # si los punteros de la liebre y la tortuga se encuentran, se detecta un ciclo
         if tortuga == liebre:
-            print("Ciclo detectado")
-            print(tortuga, liebre)
-            ciclo = True
+            print("Ciclo detectado en")
+            ciclo = True  # Establecer que hay un ciclo
             break
 
+    # si se detecta un ciclo, iterar a través de la lista enlazada nuevamente para encontrar los nodos involucrados en el ciclo
     if ciclo:
         liebre = lista
-        
+
         while liebre != tortuga:
             liebre = liebre.siguiente
             tortuga = tortuga.siguiente
+            # imprimir los nodos involucrados en el ciclo
             print(tortuga, liebre)
+        return True  # retorna verdadero si hay ciclo
 
-        return True
-
-    return print("No hay ciclo")
-
-# Pruebas de función
-#  Crea una lista enlazada con y sin ciclo y utiliza la función que implementaste para detectar los ciclos en estas listas.
-def test_lista_ciclo():
-    nodo1 = Nodo(1)
-    nodo2 = Nodo(2)
-    nodo3 = Nodo(3)
-    nodo4 = Nodo(4)
-    nodo5 = Nodo(5)
-
-    nodo1.siguiente = nodo2
-    nodo2.siguiente = nodo3
-    nodo3.siguiente = nodo4
-    nodo4.siguiente = nodo5
-    nodo5.siguiente = nodo2
-    
-
-    FloydsTortoise(nodo1)
+    return False  # Retorna falso si no hay un ciclo
 
 
-def test_lista_sin_ciclo():
-    nodo1 = Nodo(1)
-    nodo2 = Nodo(2)
-    nodo3 = Nodo(3)
-    nodo4 = Nodo(4)
-    nodo5 = Nodo(5)
+def test_FloydsTortoise(ciclo=True):
+    # Test casoo 1:
+    class Nodo():
+        def __init__(self, valor):
+            self.valor = valor
+            self.siguiente = None
 
-    nodo1.siguiente = nodo2
-    nodo2.siguiente = nodo3
-    nodo3.siguiente = nodo4
-    nodo4.siguiente = nodo5
-    
-    print("Lista creada")
-    imprimir_lista(nodo1)
-    
-    FloydsTortoise(nodo1)
+        def __repr__(self) -> str:
+            return f"<nodo {self.valor}>"
+
+    lista = Nodo(1)
+    lista.siguiente = Nodo(2)
+    lista.siguiente.siguiente = Nodo(3)
+    lista.siguiente.siguiente.siguiente = Nodo(4)
+
+    print("test 1: No hay ciclo en la lista entrelazada, la lista creada fue:")
+    imprimir_lista(lista)
+    assert FloydsTortoise(lista) == False
+
+    # Test caso 2:
+    print("test 2: lista entrelazada con Ciclo, la lista creada fue:  \n1 -> 2 -> 3 -> 4-> 2")
+    lista.siguiente.siguiente.siguiente = lista.siguiente
+
+    assert FloydsTortoise(lista) == True
+
 
 # Busqueda de números repetidos en una lista
 
+def detectar_numero_repetido(lista):
+    """
+    Esta función toma una lista como entrada y detecta si hay un número repetido en la lista.
+    Utiliza el algoritmo de detección de ciclos de Floyd para detectar si hay un ciclo en la lista.
+    Si se detecta un ciclo, devuelve el primer número que aparece dos veces en el ciclo.
+    Si no se detecta ningún ciclo, devuelve "No se ha detectado ciclo en la lista".
 
-def detectar_ciclo(lista):
-    
-    '''
-    Tener en cuenta que los valores de las lista tienen que ser menor o igual n (tamaño de la lista)
-    Otra consideración es que solo encuentra un valor repetido en la lista, si hay mas valores no los mostrara
-    Tiene que haber al menos un número repetido o devolvera el primera valor de la lista
-    '''
+    Args:
+    - lista: una lista de enteros
+
+    Returns:
+    - un entero
+    """
     tortuga = lista[0]
     liebre = lista[0]
     while True:
         tortuga = lista[tortuga]
-        liebre= lista[lista[liebre]]
-        if tortuga ==  liebre:
+        liebre = lista[lista[liebre]]
+        if tortuga == liebre:
             break
 
-    liebre= lista[0]
+    liebre = lista[0]
 
     while liebre != tortuga:
         liebre = lista[liebre]
-        tortuga=lista[tortuga]
-    if liebre == None:
-        return "No se ha detectado ciclo en la lista"
+        tortuga = lista[tortuga]
+
     return liebre
 
-#Haz una funcion que pruebe la funcion detectar_ciclo
-def test_detectar_ciclo():
-    import random as rd
-    tamano = int(input('Ingrese el tamaño de la lista: '))
-    lista = [rd.randint(1, tamano-1) for i in range(tamano)]
-    print(f'La lista es {list(map(str, lista))}')
-    posicion = detectar_ciclo(lista)
-    print(f"Un numero repetido es {posicion}")
 
-#genera un menu para las opciones anteriores
+def test_detectar_numero_repetido():
+    # Test case 1: Cycle in the list, with repeated number
+    print("Lista con un valor repetido:")
+    lista = [3, 1, 0, 3, 2]
+    print(lista)
+    assert detectar_numero_repetido(lista) == 3
+    print("El numero repetido es 2")
+
+
+
 print("Menu")
 
+
 def menu():
-    print("\nOpciones:\n" + \
-        "1.-Prueba FloydsTortoise lista entrelazada con ciclo\n" +\
-        "2.-Prueba FloydsTortoise lista entrelazada sin ciclo\n"+ \
-        "3.-Busqueda de números repetidos en una lista\n"+ \
-        "4.-Salir del programa")
+    print("\nOpciones:\n" +
+          "1.-Pruebas del algoritmo de FloydsTortoise \n" +
+          "2.-Busqueda de números repetidos en una lista\n" +
+          "3.-Salir del programa")
     while True:
         try:
             option = int(input())
-            if option==1:
-                test_lista_ciclo()
-            elif option==2:
-                test_lista_sin_ciclo()
-            elif option==3:
-                test_detectar_ciclo()
+            if option == 1:
+                test_FloydsTortoise()
+            elif option == 2:
+                test_detectar_numero_repetido()
             else:
-                print("Opción no válida, por favor elija entre 1 y 4.")
+                print("Opción no válida, por favor elija entre 1 y 2.")
             menu()
         except ValueError:
             print("Por favor ingrese un número entero.")
             menu()
 
-#Corre el menu en el main
-if __name__=="__main__":
-    menu()
 
+# Corre el menu en el main
+if __name__ == "__main__":
+    menu()
